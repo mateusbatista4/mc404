@@ -1,21 +1,3 @@
-
-
-.org 0x065
-soma: .word 0000000000
-.org 0x066
-const_1: .word 0000000001
-.org 0x067
-i: .word 0000000000
-
-.org 0x3FE
-end_v2:
-
-.org 0x3FF
-end_v1: 
-
-.org 0x3FD 
-len:
-
 .org 0x000
 inicio:
 
@@ -43,3 +25,19 @@ condicional:
     JUMP+ M(inicio, 0:19)
     LOAD M(soma) 
     JUMP M(0x400)
+    
+.org 0x065
+soma: .word 0000000000
+.org 0x066
+const_1: .word 0000000001
+.org 0x067
+i: .word 0000000000
+
+.org 0x3FE
+end_v2:
+
+.org 0x3FF
+end_v1: 
+
+.org 0x3FD 
+len:
