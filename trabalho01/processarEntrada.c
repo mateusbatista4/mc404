@@ -15,18 +15,25 @@ vetor3:   .word 10 # (Decimal) Comentario apos diretiva
 # vetor4: ADD 11
 
 */
-
 // caso encontrar um "\n" no fim, retorna -1 tambem
 
+// int defType(char* str){
+//     if(str[strlen(str) - 1] == ":")
+//         return 1;
+    
+// }
 
 
-int processarEntrada(char* entrada, unsigned tamanho){       
+int processarEntrada(char* entrada, unsigned tamanho){           
+    
+
     char ** lines = malloc(tamanho*sizeof(char*));
-    for (int i = 0; i < tamanho; i++) lines[i] = malloc(200*sizeof(char));
+    for (int i = 0; i < tamanho; i++) lines[i] = malloc(200*sizeof(char)); //dar free
               
     char * line = strtok(entrada, "\n");
     int t = 0;
     while( line != NULL ) {
+     
       for (int i = 0; i < 200; i++){ 
         lines[t][i] = line[i];
       }
@@ -37,7 +44,7 @@ int processarEntrada(char* entrada, unsigned tamanho){
     
     
     char ** tokens = malloc(tamanho*sizeof(char*));
-    for (int i = 0; i < tamanho; i++) tokens[i] = malloc(50*sizeof(char));
+    for (int i = 0; i < tamanho; i++) tokens[i] = malloc(50*sizeof(char)); // dar free
 
         
 
@@ -45,22 +52,31 @@ int processarEntrada(char* entrada, unsigned tamanho){
     t = 0;
     while(strlen(lines[k]) > 0){
         
-        char *oldstr = malloc(sizeof(lines[k]));
+        char *oldstr = malloc(sizeof(lines[k])); 
         strcpy(oldstr,lines[k]);
         
         char * token = strtok(oldstr, " ");
-        //printf("%s\n",token);
+
+        if (token != NULL && strchr(token, '#')){
+            token = NULL;
+           
+        }
         
         while( token != NULL ) {
             for (int i = 0; i < 50; i++){ 
-                tokens[t][i] = token[i];
-            }
+                tokens[t][i] = token[i]; // criar objetos do tipo Token?
+            }            
             t++;     
             token = strtok(NULL, " ");
-            //if(token) printf("%s\n",token);
+            if (token!= NULL && strchr(token, '#')){
+                
+                token = NULL;
+            }
         }
         k++;
+        free(oldstr);
     }
+    
     
          
 
