@@ -25,11 +25,22 @@ int isDecimal(char* p){
 }
 
 int isInstruction(char* str){
+    char *oldstr = malloc(sizeof(str)); 
+    strcpy(oldstr,str);
+    for (int i = 0; i < strlen(str); i++){
+        oldstr[i] = toupper(oldstr[i]);
+        
+    }
+
     char* instructions[17] = {"LD", "LDINV", "LDABS", "LDMQ", "LDMQMX", "STORE", "JUMP",
     "JGE" ,"ADD", "ADDABS", "SUB", "SUBABS", "MULT", "DIV", "LSH", "RSH", "STOREND"};
     for (int i = 0; i < 17; i++){
-        if(strcmp(str,instructions[i]) == 0) return 1;
+        if(strcmp(oldstr,instructions[i]) == 0) {
+           
+            return 1;
+        }
     }
+    free(oldstr);
     return 0;
 }
 
@@ -103,27 +114,27 @@ int processarEntrada(char* entrada, unsigned tamanho){
                 switch (defType(token)){
                     case 1:
                         adicionarToken(DefRotulo,token,k);
-                        
+                        printf("linha: %d , Rotulo, tk: %s\n",k,token);
                         break;
                     case 2:
                         adicionarToken(Hexadecimal,token,k);
-                       
+                        printf("linha: %d , Hex, tk: %s\n",k,token);
                         break;
                     case 3:
                         adicionarToken(Decimal,token,k);
-                       
+                        printf("linha: %d , Dec, tk: %s\n",k,token);
                         break;
                     case 4:
                         adicionarToken(Diretiva,token,k);
-                    
+                        printf("linha: %d , Dire, tk: %s\n",k,token);
                         break;
                     case 5:
                         adicionarToken(Instrucao,token,k);
-                      
+                        printf("linha: %d , Instru, tk: %s\n",k,token);
                         break;
                     case 6:
                         adicionarToken(Nome,token,k);
-                       
+                        printf("linha: %d , Nome, tk: %s\n",k,token);
                         break;
                     return -1;
                     
@@ -142,17 +153,17 @@ int processarEntrada(char* entrada, unsigned tamanho){
     }
     
     
-    for (int i = 0; strlen(tokens[i]) > 0 ; i++){   
-        printf("token %d : %s\n",i,tokens[i]);
-    } 
-    for (int i = 0; i < cont; i++){ 
-        printf("linha %d : %s\n",i,lines[i]);
-    }     
+    // for (int i = 0; strlen(tokens[i]) > 0 ; i++){   
+    //     printf("token %d : %s\n",i,tokens[i]);
+    // } 
+    // for (int i = 0; i < cont; i++){ 
+    //     printf("linha %d : %s\n",i,lines[i]);
+    // }     
     return 0;
 }
 
 int main(){
-    char string[1000] = "#Defines\n.set DEFAULT 16\n#variables\nvar_0:  .word DEFAULT\n\nvar_1:  .word 0x123\n#Code\n.org 0x100\nLD var_1\nSUB var_0";
+    char string[1000] = "\nADD 0x10\nSUB 20\n\nadd k           #Erro na Parte 2! Usado, mas não definido!\nSUB 15";
     int tamanho = 10;
 
 
