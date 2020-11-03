@@ -2,8 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <token.h>
-
+#include "token.h"
+#include "token.c"
 /* Exemplo
 
 vetor1:
@@ -16,13 +16,43 @@ vetor3:   .word 10 # (Decimal) Comentario apos diretiva
 # vetor4: ADD 11
 
 */
-// caso encontrar um "\n" no fim, retorna -1 tambem
-
-// int defType(char* str){
-//     if(str[strlen(str) - 1] == ":")
-//         return 1;
+int isDecimal(char* p){
+    for (int i = 0; i < strlen(p); i++){
+        if(!isdigit(p[i])) return 0;
+    }
+    return 1;
     
-// }
+}
+
+int isInstruction(char* str){
+    char* instructions[17] = {"LD", "LDINV", "LDABS", "LDMQ", "LDMQMX", "STORE", "JUMP",
+    "JGE" ,"ADD", "ADDABS", "SUB", "SUBABS", "MULT", "DIV", "LSH", "RSH", "STOREND"};
+    for (int i = 0; i < 17; i++){
+        if(strcmp(str,instructions[i]) == 0) return 1;
+    }
+    return 0;
+}
+
+int defType(char* str){
+    //printf("token: %s\n",str);
+    if(str[strlen(str) - 1] == ':') {// Rotulo
+        return 1;
+    }
+    
+    if(str[0] == '.'){ // directive
+        return 4;
+    }
+    if(isInstruction(str)){ // instruction
+        return 5;
+    }
+    if(strlen(str) >= 2 && isdigit(str[0]) && str[1] == 'x'){ // Hexadecimal
+        return 2;
+    }
+    if(isDecimal(str)){ // integger
+        return 3;
+    }
+    return 6; // name
+}
 
 
 int processarEntrada(char* entrada, unsigned tamanho){           
@@ -30,16 +60,6 @@ int processarEntrada(char* entrada, unsigned tamanho){
     char ** lines = malloc(tamanho*sizeof(char*));
     for (int i = 0; i < tamanho; i++) lines[i] = malloc(200*sizeof(char)); //dar free
               
-    // char * line = strtok(entrada, "\n");
-    // int t = 0;
-    // while( line != NULL ) {
-     
-    //   for (int i = 0; i < 200; i++){ 
-    //     lines[t][i] = line[i];
-    //   }
-    //   t++;      
-    //   line = strtok(NULL, "\n");
-    // }
     int cont = 1;
     int t = 0;
     for (int i = 0; i < tamanho; i++){
@@ -58,7 +78,6 @@ int processarEntrada(char* entrada, unsigned tamanho){
         t++;
     
     } 
-    printf("cont %d\n",cont);
 
     char ** tokens = malloc(tamanho*sizeof(char*));
     for (int i = 0; i < tamanho; i++) tokens[i] = malloc(50*sizeof(char)); // dar free
@@ -79,7 +98,38 @@ int processarEntrada(char* entrada, unsigned tamanho){
             for (int i = 0; i < 50; i++){ 
                 tokens[t][i] = token[i]; // criar objetos do tipo Token?
             }
+            
+            if(strlen(token) > 0){
+                switch (defType(token)){
+                    case 1:
+                        adicionarToken(DefRotulo,token,k);
                         
+                        break;
+                    case 2:
+                        adicionarToken(Hexadecimal,token,k);
+                       
+                        break;
+                    case 3:
+                        adicionarToken(Decimal,token,k);
+                       
+                        break;
+                    case 4:
+                        adicionarToken(Diretiva,token,k);
+                    
+                        break;
+                    case 5:
+                        adicionarToken(Instrucao,token,k);
+                      
+                        break;
+                    case 6:
+                        adicionarToken(Nome,token,k);
+                       
+                        break;
+                    return -1;
+                    
+                }
+            }
+                       
             t++;     
             token = strtok(NULL, " ");
             if (token!= NULL && strchr(token, '#')){
@@ -92,26 +142,19 @@ int processarEntrada(char* entrada, unsigned tamanho){
     }
     
     
-    for (int i = 0; strlen(tokens[i]) > 0 ; i++){
-        
+    for (int i = 0; strlen(tokens[i]) > 0 ; i++){   
         printf("token %d : %s\n",i,tokens[i]);
     } 
-
-
-    for (int i = 0; i < cont; i++){
-        
+    for (int i = 0; i < cont; i++){ 
         printf("linha %d : %s\n",i,lines[i]);
-       
     }     
-    
     return 0;
 }
 
 int main(){
-    char string[1000] = "vetor1:\nvetor2:   .word 0x10 # (hexadecimal) Comentario apos diretiva\nvetor3:   .word 10 # (Decimal) Comentario apos diretiva\n.word 10\n.word 10  # Comentario apos diretiva\n# Comentario sozinho\n\n# vetor4: ADD 1";
+    char string[1000] = "#Defines\n.set DEFAULT 16\n#variables\nvar_0:  .word DEFAULT\n\nvar_1:  .word 0x123\n#Code\n.org 0x100\nLD var_1\nSUB var_0";
     int tamanho = 10;
-    
-    printf("%s\n\n",string);
+
 
     processarEntrada(string,strlen(string));
 }
