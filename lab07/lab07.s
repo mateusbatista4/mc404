@@ -277,7 +277,9 @@ _start:
             li a6, 0
             j while_linhas
     fim_while_linhas:
-
+    li a0, 0
+    li a7, 93
+    ecall
     ler:
         li a0, 0
         la a1, input
