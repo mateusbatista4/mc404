@@ -9,13 +9,12 @@
 # Implemente aqui as funções da API_CAR.
 # As funções devem checar os parametros e fazer as chamadas de sistema que serão
 #   tratadas na camada SoCa
+
 set_motor:
     addi sp, sp, -4
     sw ra, 0(sp)
-
     li a7, 10
     ecall
-
     lw ra, 0(sp)
     addi sp, sp, 4
     ret
@@ -23,10 +22,8 @@ set_motor:
 set_handbreak:
     addi sp, sp, -4
     sw ra, 0(sp)
-
     li a7, 11
     ecall
-
     lw ra, 0(sp)
     addi sp, sp, 4
     ret
@@ -34,10 +31,8 @@ set_handbreak:
 read_sensors:
     addi sp, sp, -4
     sw ra, 0(sp)
-
     li a7, 12
     ecall
-
     lw ra, 0(sp)
     addi sp, sp, 4
     ret
@@ -45,10 +40,8 @@ read_sensors:
 read_sensor_distance:
     addi sp, sp, -4
     sw ra, 0(sp)
-
     li a7, 13
     ecall
-
     lw ra, 0(sp)
     addi sp, sp, 4
     ret
@@ -56,10 +49,8 @@ read_sensor_distance:
 get_time:
     addi sp, sp, -4
     sw ra, 0(sp)
-
     li a7, 14
     ecall
-
     lw ra, 0(sp)
     addi sp, sp, 4
     ret
@@ -68,10 +59,8 @@ get_time:
 get_position:
     addi sp, sp, -4
     sw ra, 0(sp)
-
     li a7, 15
     ecall
-
     lw ra, 0(sp)
     addi sp, sp, 4
     ret
@@ -79,10 +68,9 @@ get_position:
 get_rotation:
     addi sp, sp, -4
     sw ra, 0(sp)
-
     li a7, 16
     ecall
-
     lw ra, 0(sp)
     addi sp, sp, 4
     ret
+
